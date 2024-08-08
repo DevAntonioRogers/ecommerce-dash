@@ -1,4 +1,17 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "ih1.redbubble.net"
+      },
+      {
+        protocol: "https",
+        hostname: "cloudflare-ipfs.com"
+      }
+    ]
+  }
+};
 
 export default nextConfig;

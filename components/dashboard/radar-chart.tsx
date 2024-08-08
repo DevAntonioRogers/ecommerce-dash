@@ -1,20 +1,22 @@
 "use client";
 
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  XAxis,
+  PolarAngleAxis,
+  PolarGrid,
+  Radar,
+  RadarChart,
 } from "recharts";
+
+import AnalyticsCard from "./analytics-card";
 
 import {
   ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import AnalyticsCard from "./analytics-card";
-
 const chartData = [
   { month: "January", desktop: 186, mobile: 80 },
   { month: "February", desktop: 305, mobile: 200 },
@@ -35,42 +37,45 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BarGraph() {
+export function RadarGraph() {
   return (
     <AnalyticsCard
-      title="Sales Bar Chart"
-      subTitle="Showing Mobile & Desktop Sales"
+      title="Visitors Radar Chart"
+      subTitle="Showing Visitors for last 6 Months"
     >
       <ChartContainer
         config={chartConfig}
         className="mx-auto aspect-square max-h-[350px]"
       >
-        <BarChart accessibilityLayer data={chartData}>
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="month"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-            tickFormatter={(value) => value.slice(0, 3)}
-          />
+        <RadarChart
+          data={chartData}
+          margin={{
+            top: -40,
+            bottom: -10,
+          }}
+        >
           <ChartTooltip
             cursor={false}
             content={
-              <ChartTooltipContent indicator="dashed" />
+              <ChartTooltipContent indicator="line" />
             }
           />
-          <Bar
+          <PolarAngleAxis dataKey="month" />
+          <PolarGrid />
+          <Radar
             dataKey="desktop"
             fill="var(--color-desktop)"
-            radius={4}
+            fillOpacity={0.6}
           />
-          <Bar
+          <Radar
             dataKey="mobile"
             fill="var(--color-mobile)"
-            radius={4}
           />
-        </BarChart>
+          <ChartLegend
+            className="mt-8"
+            content={<ChartLegendContent />}
+          />
+        </RadarChart>
       </ChartContainer>
     </AnalyticsCard>
   );
