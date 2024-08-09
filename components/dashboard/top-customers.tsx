@@ -49,8 +49,8 @@ export const TopCustomers = ({
 }: TopCustomerProps) => {
   return (
     <AnalyticsCard
-      title="Top Products"
-      subTitle="Showing Most Sold Products"
+      title="Top Customers"
+      subTitle="Showing customers with most orders"
     >
       <DataTable columns={topCustomerColumns} data={data} />
     </AnalyticsCard>
