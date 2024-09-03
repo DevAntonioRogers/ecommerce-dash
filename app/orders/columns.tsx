@@ -14,15 +14,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { z } from "zod";
+import { OrderSchema } from "@/types/orders-schema";
+import { useState } from "react";
+import DeleteOrder from "@/components/orders/delete-order-modal";
+import ViewOrderModal from "@/components/orders/view-order-modal";
 
-export type Orders = {
-  id: string | number;
-  orderNumber: string;
-  totalAmount: number;
-  date: number;
-};
+// export type Orders = {
+//   id: string | number;
+//   orderNumber: string;
+//   totalAmount: number;
+//   date: number;
+// };
 
-export const columns: ColumnDef<Orders>[] = [
+export const columns: ColumnDef<
+  z.infer<typeof OrderSchema>
+>[] = [
   {
     accessorKey: "orderNumber",
     header: "Order Number",
@@ -54,25 +61,56 @@ export const columns: ColumnDef<Orders>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original;
+      const order = row.original;
+      const orderId = order.id;
+      const [viewModalOpen, setViewModalOpen] =
+        useState(false);
+      const [deleteModalOpen, setDeleteModalOpen] =
+        useState(false);
+
+      if (!orderId) {
+        return;
+      }
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              View Order Details
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              Delete Order
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="h-8 w-8 p-0"
+              >
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => setViewModalOpen(true)}
+              >
+                View Order Details
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setDeleteModalOpen(true)}
+              >
+                Delete Order
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <div className="hidden">
+            <DeleteOrder
+              id={orderId}
+              open={deleteModalOpen}
+              onOpenChange={setDeleteModalOpen}
+            />
+
+            <ViewOrderModal
+              order={order}
+              open={viewModalOpen}
+              onOpenChange={setViewModalOpen}
+            />
+          </div>
+        </>
       );
     },
   },

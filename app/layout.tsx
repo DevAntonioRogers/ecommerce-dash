@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "@/components/navigation/navbar";
 import { ThemeProvider } from "@/providers/theme-provider";
 import Sidebar from "@/components/navigation/sidebar";
+import ToasterProvider from "@/providers/toast-provider";
+import { auth } from "@/server/auth";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -16,19 +18,21 @@ export const metadata: Metadata = {
   description: "E-Commerce Dashboard",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={poppins.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
         >
-          <Navbar />
+          <ToasterProvider />
+          <Navbar session={session} />
           <main className="flex">
             <Sidebar />
             <section className="min-h-screen flex-1">

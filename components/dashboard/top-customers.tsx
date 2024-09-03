@@ -3,20 +3,19 @@ import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { DataTable } from "../ui/data-table";
 import AnalyticsCard from "./analytics-card";
+import { CustomersSchema } from "@/types/customer-schema";
+import { z } from "zod";
 
-type TopCustomerProps = {
-  data: Customers[];
-};
-
-export type Customers = {
+export type topCustomerTypes = {
   id: string;
   name: string;
-  email: string;
   orders: number;
   image: string;
 };
 
-export const topCustomerColumns: ColumnDef<Customers>[] = [
+export const topCustomerColumns: ColumnDef<
+  z.infer<typeof CustomersSchema>
+>[] = [
   {
     accessorKey: "name",
     header: "Name",
@@ -46,7 +45,9 @@ export const topCustomerColumns: ColumnDef<Customers>[] = [
 
 export const TopCustomers = ({
   data,
-}: TopCustomerProps) => {
+}: {
+  data: topCustomerTypes[];
+}) => {
   return (
     <AnalyticsCard
       title="Top Customers"

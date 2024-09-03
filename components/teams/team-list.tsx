@@ -4,9 +4,10 @@ import TeamCard from "./teams-card";
 
 interface TeamListProps {
   data: Team[];
+  role: boolean;
 }
 
-const TeamList = ({ data }: TeamListProps) => {
+const TeamList = ({ data, role }: TeamListProps) => {
   const approvedMembers = data.filter(
     (member) => member.isApproved
   );
@@ -25,6 +26,7 @@ const TeamList = ({ data }: TeamListProps) => {
               key={index}
               member={member}
               isPending={false}
+              role={role}
             />
           ))}
         </div>
@@ -38,6 +40,7 @@ const TeamList = ({ data }: TeamListProps) => {
               key={index}
               member={member}
               isPending={true}
+              role={role}
             />
           ))}
         </div>

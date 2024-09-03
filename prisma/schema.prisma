@@ -8,17 +8,19 @@ generator client {
 }
 
 model User {
-  id         String    @id @default(cuid())
-  name       String?
-  email      String    @unique
-  image      String?   @default("no-image")
-  isApproved Boolean   @default(false)
-  isAdmin    Boolean   @default(false)
-  location   String    @default("no-location")
-  accounts   Account[]
-  sessions   Session[]
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id             String    @id @default(cuid())
+  name           String?
+  email          String    @unique
+  username       String
+  hashedPassword String
+  image          String?   @default("no-image")
+  isApproved     Boolean   @default(false)
+  isAdmin        Boolean   @default(false)
+  location       String    @default("no-location")
+  accounts       Account[]
+  sessions       Session[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 }
 
 model Account {
@@ -58,4 +60,28 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
+}
+
+model Product {
+  id      String  @id @default(cuid())
+  name    String
+  price   Float
+  image   String?
+  revenue Int
+}
+
+model Orders {
+  id           String   @id @default(cuid())
+  customerName String
+  address      String
+  totalAmount  Int
+  orderNumber  Int
+  date         DateTime @default(now())
+}
+
+model Customers {
+  id     String @id @default(cuid())
+  name   String
+  orders Int
+  image  String
 }

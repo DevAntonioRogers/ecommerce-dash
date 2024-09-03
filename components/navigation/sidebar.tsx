@@ -4,9 +4,31 @@ import { useMenuStore } from "@/store/toggleMenuStore";
 import { motion } from "framer-motion";
 import LogOutButton from "../authenticate/logout-button";
 import MenuLinks from "./menu-links";
+import useRouteCheck from "@/hooks/useRouteCheck";
+import { useEffect, useState } from "react";
 
 export default function Sidebar() {
   const { isOpen } = useMenuStore();
+  const loginRoute = useRouteCheck(["login"]);
+  const registerRoute = useRouteCheck(["register"]);
+  const onboardingRoute = useRouteCheck(["onboarding"]);
+  const [loading, setIsLoading] = useState(true);
+
+  // if (loginRoute || registerRoute) return;
+
+  useEffect(() => {
+    if (!loginRoute && !onboardingRoute && !registerRoute) {
+      setIsLoading(false);
+    }
+  }, [loginRoute, registerRoute, onboardingRoute]);
+
+  if (
+    loading ||
+    loginRoute ||
+    registerRoute ||
+    onboardingRoute
+  )
+    return null;
   return (
     <motion.div
       initial={{ width: isOpen ? 80 : 250 }}

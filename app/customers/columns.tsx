@@ -13,16 +13,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { z } from "zod";
+import { CustomersSchema } from "@/types/customer-schema";
+import { useState } from "react";
+import DeleteCustomerModal from "@/components/customers/delete-customer-modal";
 
-export type Customers = {
-  id: string;
-  name: string;
-  email: string;
-  orders: number;
-  image: string;
-};
+// export type Customers = {
+//   id: string;
+//   name: string;
+//   email: string;
+//   orders: number;
+//   image: string;
+// };
 
-export const columns: ColumnDef<Customers>[] = [
+export const columns: ColumnDef<
+  z.infer<typeof CustomersSchema>
+>[] = [
   {
     accessorKey: "name",
     header: "Name",
@@ -51,25 +57,44 @@ export const columns: ColumnDef<Customers>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original;
+      const [openDeletemodal, setOpenDeleteModal] =
+        useState(false);
+      const customers = row.original;
+      const customerId = customers.id;
+
+      if (!customerId) {
+        return;
+      }
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              Edit Customer
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              Delete Customer
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="h-8 w-8 p-0"
+              >
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => setOpenDeleteModal(true)}
+              >
+                Delete Customer
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <div className="hidden">
+            <DeleteCustomerModal
+              id={customerId}
+              open={openDeletemodal}
+              onOpenChange={setOpenDeleteModal}
+            />
+          </div>
+        </>
       );
     },
   },
